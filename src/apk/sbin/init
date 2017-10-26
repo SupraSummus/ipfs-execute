@@ -1,0 +1,6 @@
+#!/bin/sh
+source /etc/profile
+
+tar -C /tmp -xzf /input/rootfs.tar.gz
+apk -X /input/repo --no-network --root /tmp add $@
+tar -C /tmp -czf /output/rootfs.tar.gz .
