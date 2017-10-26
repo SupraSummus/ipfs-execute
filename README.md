@@ -2,8 +2,8 @@ IPFS execute!
 =============
 
 `ipfs_execute.sh` is a simple script that combines sandboxing provided
-by (Bubblewrap)[https://github.com/projectatomic/bubblewrap] with data
-storage provided by (IPFS)[https://ipfs.io/]. The tool is proof of
+by [Bubblewrap](https://github.com/projectatomic/bubblewrap) with data
+storage provided by [IPFS](https://ipfs.io/). The tool is proof of
 concept for "pure computations in IPFS".
 
 `ipfs_execute.sh` fetches description of what to do from IPFS, executes
