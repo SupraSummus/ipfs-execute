@@ -1,0 +1,15 @@
+#!/bin/busybox.static sh
+set -x
+
+# extract
+busybox.static gzip -dc /input/rootfs.tar.gz | busybox.static tar -xm -C /tmp
+
+# make symlinks
+/bin/busybox.static --install -s /tmp/bin
+
+# make init
+busybox.static echo -en '#!/bin/sh\n/bin/busybox.static $@\n' > /tmp/sbin/init
+busybox.static chmod +x /tmp/sbin/init
+
+# compress result
+busybox.static tar -cm -C /tmp . | busybox.static gzip -nc > /output/rootfs.tar.gz

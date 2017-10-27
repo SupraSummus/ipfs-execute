@@ -33,50 +33,55 @@ Dependencies
 Try it
 ------
 
-    [jan@kukla:~/ipfs-execute]$ ./ipfs_execute.sh `cat images/alpine-sh` `cat repository`
+    [jan@kukla:~/ipfs-execute]$ ./ipfs_execute.sh `cat alpine/images/busybox` `cat alpine/repository` sh
     kukla:/# ls /input/
-    v3.6
-    kukla:/# ls /input/v3.6/community/x86_64/librd*
-    /input/v3.6/community/x86_64/librdkafka-0.9.5-r0.apk      /input/v3.6/community/x86_64/librdkafka-dev-0.9.5-r0.apk
+    x86_64
+    / # echo blabla > /output/test
+    / # exit
+    QmeugpFaBp7aafV2uN7GC3E2GbAycnEU3c2Q3FS7mSLbo4
 
 What happened? Image located at path specified in `images/alpine-sh` got
 executed with IPFS path specified in `repository` mounted at `/input`.
+When container finished `/output` was pushed to IPFS. Let's inspect:
+
+    [jan@kukla:~/ipfs-execute]$ ipfs cat QmeugpFaBp7aafV2uN7GC3E2GbAycnEU3c2Q3FS7mSLbo4/test
+    blabla
 
 ### Next lets install some packages!
 
 For this we need prepared directory with repository and base rootfs.
 Simple tool for that is `ipfs_mkdir.sh`. Usage is as follows:
 
-    ./ipfs_mkdir.sh repo `cat repository`/v3.6/main rootfs.tar.gz `cat images/alpine-sh` > /tmp/alpine-sh-with-repo
-    cat /tmp/alpine-sh-with-repo
-    # QmPEe5AFNacXem1TuQCYsJeCEk4erb5Z3nuRCEn3ibtvQA
+    ./ipfs_mkdir.sh repository `cat alpine/repository` rootfs.tar.gz `cat alpine/images/busybox` > /tmp/busybox-with-repo
+    cat /tmp/busybox-with-repo
+    # QmYHTCYxkC12CH39BxHebvFFEfgKaECcxQ78NE7mYk7Prn
 
 We are ready to call `ipfs_execute.sh`.
 
-    ./ipfs_execute.sh `cat images/apk` `cat /tmp/alpine-sh-with-repo` gcc > /tmp/alpine-gcc
-    ipfs ls `cat /tmp/alpine-gcc`
-    # QmeQX49G8qsxpcsYDuXoz5PnHnhnkrQRKth8ww7VG2ZpZV 33236061 rootfs.tar.gz
-    ./ipfs_execute.sh `cat /tmp/alpine-gcc`/rootfs.tar.gz `cat empty`
+    ./ipfs_execute.sh `cat alpine/images/apk` `cat /tmp/busybox-with-repo` bash > /tmp/alpine-bash
+    ipfs ls `cat /tmp/alpine-bash`
+    # QmbBmLDEsMTHXUe5dLFB5iRmpvrdMzSMUTZjop2GrUvKvZ 2586201 rootfs.tar.gz
+    ./ipfs_execute.sh `cat /tmp/alpine-bash`/rootfs.tar.gz `cat empty` sh
 
 and inside spawned container:
 
-    gcc --version
-    # gcc (Alpine 6.3.0) 6.3.0
+    bash --version
+    # GNU bash, version 4.3.48(1)-release (x86_64-alpine-linux-musl)
     # ...
 
 
 ### Base/example images
 
-Hashes of example containers are listed in `images/`.
- * `alpine` is unmodified alpine linux. It doesn't start yet because of
-   init expecting to be called as PID 1. To be fixed.
- * `alpine-sh` - modified version of alpine linux. Init is replaced with sh.
- * `apk` - alpine linux with init pointing to script that installs
-   stuff. This container expects directory with `rootfs.tar.gz` and
-   `repo` (dir with alpine repo structure) as argument.
+Hashes of example containers are listed in `alpine/images/`.
+ * `busybox` - just an unpacke busybox-static alpine package. Init is
+   set to call busybox with supplied args.
+ * `jointargz` - unpacks all `.tar.gz` files from input into single
+   directory and then packs everything.
+ * `apk` - alpine linux apk package with init pointing to script that
+   installs stuff. This container expects directory with `rootfs.tar.gz`
+   and `repository` (dir with alpine repo structure) as argument.
 
 In `repository` there is a hash of alpine repository mirror.
-In `empty` there is a hash of empty dir.
 
 Makefile is just for building images. Do `make clean` to delete prebuilt
 images and then call `make`.
@@ -87,3 +92,4 @@ TODOs
  * add `--aspid1` to bubblewrap call.
  * security considerations if mounting `/dev` and `/proc` is safe.
  * RAM, disk, CPU time limits
+ * build consistency - don't depend on current time etc

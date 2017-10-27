@@ -14,7 +14,7 @@ shift 2
 
 # get and unpack root fs
 mkdir rootfs
-ipfs cat -- "$rootfs" | tar -xz -C rootfs
+ipfs cat -- "$rootfs" | tar -xz -C rootfs --warning=no-timestamp
 
 # make output dir
 mkdir output

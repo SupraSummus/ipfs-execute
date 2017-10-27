@@ -1,0 +1,5 @@
+#!/bin/busybox.static sh
+set -x
+tar -C /tmp -xzmf /input/rootfs.tar.gz
+apk.static -X /input/repository -U --no-network --allow-untrusted --root /tmp --initdb add $@
+tar -C /tmp -czmf /output/rootfs.tar.gz .

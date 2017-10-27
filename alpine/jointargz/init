@@ -1,0 +1,6 @@
+#!/bin/busybox.static sh
+set -x
+for FILE in `ls /input`; do
+	tar -xzmf /input/$FILE -C /tmp
+done
+tar -czmf /output/result.tar.gz -C /tmp .
