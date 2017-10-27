@@ -26,7 +26,7 @@ written to stdout.
 Dependencies
 ------------
 
-* IPFS (deamonized and mounted on `/ipfs`)
+* IPFS (daemonized and mounted on `/ipfs`)
 * Bubblewrap 1.8
 * sh + tar + gzip + some other obvious things
 
