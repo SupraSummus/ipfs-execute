@@ -25,7 +25,7 @@ env -i `which bwrap` \
 	--uid 0 \
 	--gid 0 \
 	--bind rootfs / \
-	--ro-bind "/ipfs/$input" /input \
+	--ro-bind "`ipfs resolve -- $input`" /input \
 	--bind output /output \
 	--tmpfs /tmp \
 	--proc /proc \

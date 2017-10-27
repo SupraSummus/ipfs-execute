@@ -15,7 +15,6 @@ More in depth description
 `ipfs_execute.sh` takes following arguments in order:
  * IPFS path of filesystem snapshot (`.tar.gz` file)
  * IPFS path of argument - it will be mounted at `/input` inside container.
-   Empty argument can be passed (`""`) and then `/input` will be whole `/ipfs`.
  * arbitrary number of arguments which will be passed to `/sbin/init`
 
 `ipfs_execute.sh` unpacks root fs, mounts input, mounts empty directory
@@ -34,19 +33,14 @@ Dependencies
 Try it
 ------
 
-    [jan@kukla:~/ipfs-execute]$ ./ipfs_execute.sh `cat images/alpine-sh` ""
-    kukla:/# ls /input/QmNZiPk974vDsPmQii3YbrMKfi12KTSNM7XMiYyiea4VYZ
-    Makefile           example            home               lib                published-version
-
-What happened? Image located at path specified in `images/alpine-sh` got
-executed with access to whole `/ipfs` (because of empty second arg). We
-can limit this access to specific path:
-
     [jan@kukla:~/ipfs-execute]$ ./ipfs_execute.sh `cat images/alpine-sh` `cat repository`
     kukla:/# ls /input/
     v3.6
     kukla:/# ls /input/v3.6/community/x86_64/librd*
     /input/v3.6/community/x86_64/librdkafka-0.9.5-r0.apk      /input/v3.6/community/x86_64/librdkafka-dev-0.9.5-r0.apk
+
+What happened? Image located at path specified in `images/alpine-sh` got
+executed with IPFS path specified in `repository` mounted at `/input`.
 
 ### Next lets install some packages!
 
@@ -66,7 +60,7 @@ We are ready to call `ipfs_execute.sh`.
     # QmeQX49G8qsxpcsYDuXoz5PnHnhnkrQRKth8ww7VG2ZpZV 33236061 rootfs.tar.gz
     ./ipfs_execute.sh `cat alpine-gcc`/rootfs.tar.gz `cat empty`
 
-and inside container:
+and inside spawned container:
 
     gcc --version
     # gcc (Alpine 6.3.0) 6.3.0
@@ -92,8 +86,6 @@ images and then call `make`.
 TODOs
 -----
 
- * verify if second argument is inside `/ipfs`. Someting like `../etc`
-   can be passed and this is bad.
  * add `--aspid1` to bubblewrap call.
  * security considerations if mounting `/dev` and `/proc` is safe.
  * RAM, disk, CPU time limits
