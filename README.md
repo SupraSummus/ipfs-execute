@@ -45,20 +45,18 @@ executed with IPFS path specified in `repository` mounted at `/input`.
 ### Next lets install some packages!
 
 For this we need prepared directory with repository and base rootfs.
-Lets use `ipfs files` subcommand.
+Simple tool for that is `ipfs_mkdir.sh`. Usage is as follows:
 
-    ipfs files mkdir /test
-    ipfs files cp /ipfs/`cat repository`/v3.6/main /test/repo
-    ipfs files cp /ipfs/`cat images/alpine-sh` /test/rootfs.tar.gz
+    ./ipfs_mkdir.sh repo `cat repository`/v3.6/main rootfs.tar.gz `cat images/alpine-sh` > /tmp/alpine-sh-with-repo
+    cat /tmp/alpine-sh-with-repo
+    # QmPEe5AFNacXem1TuQCYsJeCEk4erb5Z3nuRCEn3ibtvQA
 
-Hash of prepared input can be obtained with `ipfs files stat --hash /test`.
-Sample output is `QmPEe5AFNacXem1TuQCYsJeCEk4erb5Z3nuRCEn3ibtvQA`.
 We are ready to call `ipfs_execute.sh`.
 
-    ./ipfs_execute.sh `cat images/apk` `ipfs files stat --hash /test` gcc > alpine-gcc
-    ifps ls `cat alpine-gcc`
+    ./ipfs_execute.sh `cat images/apk` `cat /tmp/alpine-sh-with-repo` gcc > /tmp/alpine-gcc
+    ipfs ls `cat /tmp/alpine-gcc`
     # QmeQX49G8qsxpcsYDuXoz5PnHnhnkrQRKth8ww7VG2ZpZV 33236061 rootfs.tar.gz
-    ./ipfs_execute.sh `cat alpine-gcc`/rootfs.tar.gz `cat empty`
+    ./ipfs_execute.sh `cat /tmp/alpine-gcc`/rootfs.tar.gz `cat empty`
 
 and inside spawned container:
 
