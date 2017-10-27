@@ -3,7 +3,7 @@ set -e
 
 function cleanup {
 	# cleanup
-	rm -rf rootfs input output
+	rm -rf rootfs output
 }
 trap cleanup EXIT
 
