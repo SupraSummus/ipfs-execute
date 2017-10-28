@@ -1,15 +1,23 @@
 #!/bin/busybox.static sh
-set -x
+set -e -x
+TZ=UTC
+SET_MTIME="busybox.static touch -h -d 197001010000"
 
 # extract
-busybox.static gzip -dc /input/rootfs.tar.gz | busybox.static tar -xm -C /tmp
+busybox.static tar -xzf /input/rootfs.tar.gz -C /tmp
 
 # make symlinks
 /bin/busybox.static --install -s /tmp/bin
+busybox.static find /tmp/bin -type l -exec $SET_MTIME {} +
+$SET_MTIME /tmp/bin
 
 # make init
 busybox.static echo -en '#!/bin/sh\n/bin/busybox.static $@\n' > /tmp/sbin/init
 busybox.static chmod +x /tmp/sbin/init
+$SET_MTIME /tmp/sbin/init
+$SET_MTIME /tmp/sbin
+
+$SET_MTIME /tmp
 
 # compress result
-busybox.static tar -cm -C /tmp . | busybox.static gzip -nc > /output/rootfs.tar.gz
+busybox.static tar -c -C /tmp . | busybox.static gzip -nc > /output/rootfs.tar.gz
