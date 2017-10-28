@@ -28,6 +28,7 @@ Dependencies
 
 * IPFS (daemonized and mounted on `/ipfs`)
 * Bubblewrap 1.8
+* GNU Make (only if you want to build example images or use install script)
 * sh + tar + gzip + some other obvious things
 
 Try it
@@ -83,8 +84,12 @@ Hashes of example containers are listed in `alpine/images/`.
 
 In `repository` there is a hash of alpine repository mirror.
 
-Makefile is just for building images. Do `make clean` to delete prebuilt
-images and then call `make`.
+In order to build images you need to have scripts in your path. Scripts
+have to be named differently: `ipfs-execute` and `ipfs-mkdir`.
+`make install PREFIX=~/.local/bin` will copy them to `~/.local/bin`.
+
+Makefile in `alpine/` dir is just for building images. Do `make -C alpine clean`
+to delete prebuilt images and then call `make -C alpine`.
 
 TODOs
 -----

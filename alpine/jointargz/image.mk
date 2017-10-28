@@ -1,7 +1,7 @@
 images/jointargz: $(wildcard jointargz/*) images/busybox
-	ipfs_execute.sh \
+	ipfs-execute \
 		$$(cat images/busybox) \
-		$$(ipfs_mkdir.sh \
+		$$(ipfs-mkdir \
 			build.sh $$(ipfs add --pin=false -Q -- jointargz/build.sh) \
 			rootfs.tar.gz $$(cat images/busybox) \
 			init $$(ipfs add --pin=false -Q -- jointargz/init) \
