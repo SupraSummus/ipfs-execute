@@ -21,6 +21,7 @@ mkdir tmp
 mkdir output
 
 # run task in bubblewrap
+set +e
 env -i `which bwrap` \
 	--unshare-all \
 	--uid 0 \
@@ -34,6 +35,7 @@ env -i `which bwrap` \
 	--dev /dev \
 	--remount-ro / \
 	/sbin/init $@ 1>&2
+set -e
 
 # push result to ipfs
 ipfs add -r -Q --pin=false -- output
