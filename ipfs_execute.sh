@@ -28,7 +28,7 @@ env -i `which bwrap` \
 	--gid 0 \
 	--die-with-parent \
 	--bind rootfs / \
-	--ro-bind "`ipfs resolve -- $input`" /input \
+	--ro-bind "`ipfs resolve -r -- $input`" /input \
 	--bind output /output \
 	--bind tmp /tmp \
 	--proc /proc \

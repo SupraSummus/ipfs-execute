@@ -10,7 +10,7 @@ trap cleanup EXIT
 D=$(mktemp -d)
 
 # obtain latest version of busybox-static
-V=$(ipfs ls -- $1/$2/ | grep busybox-static | tail -n1 | cut -d " " -f1)
+V=$(ipfs ls --resolve-type=false -- $1/$2/ | grep busybox-static | tail -n1 | cut -d " " -f1)
 
 # extract and add custom init file
 ipfs cat -- $V | tar -xz -C $D

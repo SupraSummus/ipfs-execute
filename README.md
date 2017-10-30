@@ -59,16 +59,15 @@ Simple tool for that is `ipfs_mkdir.sh`. Usage is as follows:
 
 We are ready to call `ipfs_execute.sh`.
 
-    ./ipfs_execute.sh `cat alpine/images/apk` `cat /tmp/busybox-with-repo` bash > /tmp/alpine-bash
-    ipfs ls `cat /tmp/alpine-bash`
-    # QmbBmLDEsMTHXUe5dLFB5iRmpvrdMzSMUTZjop2GrUvKvZ 2586201 rootfs.tar.gz
-    ./ipfs_execute.sh `cat /tmp/alpine-bash`/rootfs.tar.gz `cat empty` sh
+    ./ipfs_execute.sh `cat alpine/images/apk` `cat /tmp/busybox-with-repo` file > /tmp/alpine-file
+    ipfs ls `cat /tmp/alpine-file`
+    # QmR4uzVfobf8zEeivQypCgKaDuGAZknvTViwtZbEcSanyr 1280141 rootfs.tar.gz
+    ./ipfs_execute.sh `cat /tmp/alpine-file`/rootfs.tar.gz `cat empty` sh
 
 and inside spawned container:
 
-    bash --version
-    # GNU bash, version 4.3.48(1)-release (x86_64-alpine-linux-musl)
-    # ...
+    file /bin/busybox.static
+    # /bin/busybox.static: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped
 
 
 ### Base/example images
@@ -81,6 +80,7 @@ Hashes of example containers are listed in `alpine/images/`.
  * `apk` - alpine linux apk package with init pointing to script that
    installs stuff. This container expects directory with `rootfs.tar.gz`
    and `repository` (dir with alpine repo structure) as argument.
+   // TODO package installation is super slow. But why?
 
 In `repository` there is a hash of alpine repository mirror.
 
