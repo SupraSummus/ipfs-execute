@@ -18,10 +18,18 @@ More in depth description
  * arbitrary number of arguments which will be passed to `/sbin/init`
 
 `ipfs_execute.sh` unpacks root fs, mounts input, mounts empty directory
-at `/output`. After that container is executed. Entry point is `/sbin/init`.
+at `/output` and another one at `/tmp`. After that container is executed.
+Entry point is `/sbin/init`.
 
 When container finishes whole `/output` is added to IPFS. Final hash is
 written to stdout.
+
+`/` and `/input` is mounted read-only. All persistent efects must be
+located in `/output` tree. This potentially allows to reuse unpacked
+rootfs or input.
+
+Containers don't have access to internet. Output should be
+deterministicaly computed from rootfs and input.
 
 Dependencies
 ------------
@@ -80,7 +88,6 @@ Hashes of example containers are listed in `alpine/images/`.
  * `apk` - alpine linux apk package with init pointing to script that
    installs stuff. This container expects directory with `rootfs.tar.gz`
    and `repository` (dir with alpine repo structure) as argument.
-   // TODO package installation is super slow. But why?
 
 In `repository` there is a hash of alpine repository mirror.
 
@@ -98,3 +105,4 @@ TODOs
  * security considerations if mounting `/dev` and `/proc` is safe.
  * RAM, disk, CPU time limits
  * build consistency - don't depend on current time etc
+ * reading from FUSE-mounted `/ipfs` is very slow. This is known [issue](https://github.com/ipfs/go-ipfs/issues/2166).
