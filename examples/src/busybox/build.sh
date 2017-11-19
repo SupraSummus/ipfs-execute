@@ -15,7 +15,7 @@ V=$(ipfs ls --resolve-type=false -- $1/$2/ | grep busybox-static | tail -n1 | cu
 # extract and add custom init file
 ipfs cat -- $V | tar -xz -C $D
 mkdir $D/sbin
-cp init $D/sbin/init
+cp $(dirname "$0")/init $D/sbin/init
 
 # remove timestamps - to ensure build result independent of time
 touch -d 1970-01-01 $D/sbin/init
