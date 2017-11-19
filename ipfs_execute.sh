@@ -3,7 +3,8 @@ set -e
 
 function cleanup {
 	# cleanup
-	rm -rf rootfs tmp output
+	fusermount -u input || true
+	rm -rf rootfs input tmp output
 }
 trap cleanup EXIT
 
@@ -16,9 +17,13 @@ shift 2
 mkdir rootfs
 ipfs cat -- "$rootfs" | tar -xz -C rootfs --warning=no-timestamp
 
-# make output and tmp dir
+# make required dirs
+mkdir input
 mkdir tmp
 mkdir output
+
+# mount input
+ipfs-api-mount --background $(ipfs resolve -r -- "$input") input
 
 # run task in bubblewrap
 set +e
@@ -28,7 +33,7 @@ env -i `which bwrap` \
 	--gid 0 \
 	--die-with-parent \
 	--bind rootfs / \
-	--ro-bind "`ipfs resolve -r -- $input`" /input \
+	--ro-bind input /input \
 	--bind output /output \
 	--bind tmp /tmp \
 	--proc /proc \

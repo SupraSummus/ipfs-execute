@@ -1,23 +1,23 @@
 IPFS execute!
 =============
 
-`ipfs_execute.sh` is a simple script that combines sandboxing provided
+`ipfs-execute` is a simple script that combines sandboxing provided
 by [Bubblewrap](https://github.com/projectatomic/bubblewrap) with data
 storage provided by [IPFS](https://ipfs.io/). The tool is proof of
 concept for "pure computations in IPFS".
 
-`ipfs_execute.sh` fetches description of what to do from IPFS, executes
+`ipfs-execute` fetches description of what to do from IPFS, executes
 computation in sandbox and then pushes result back to IPFS.
 
 More in depth description
 -------------------------
 
-`ipfs_execute.sh` takes following arguments in order:
+`ipfs-execute` takes following arguments in order:
  * IPFS path of filesystem snapshot (`.tar.gz` file)
  * IPFS path of argument - it will be mounted at `/input` inside container.
  * arbitrary number of arguments which will be passed to `/sbin/init`
 
-`ipfs_execute.sh` unpacks root fs, mounts input, mounts empty directory
+`ipfs-execute` unpacks root fs, mounts input, mounts empty directory
 at `/output` and another one at `/tmp`. After that container is executed.
 Entry point is `/sbin/init`.
 
@@ -34,10 +34,12 @@ deterministicaly computed from rootfs and input.
 Dependencies
 ------------
 
-* IPFS (daemonized and mounted on `/ipfs`)
+* IPFS (daemonized)
 * Bubblewrap 1.8
-* GNU Make (only if you want to build example images or use install script)
+* [ipfs-api-mount](https://github.com/SupraSummus/ipfs-api-mount)
 * sh + tar + gzip + some other obvious things
+* GNU Make (only if you want to build example images or use install script)
+* [ipfs-shell-utlis](https://github.com/SupraSummus/ipfs-shell-utils) (only if you want to build example images)
 
 Try it
 ------
@@ -102,4 +104,3 @@ TODOs
  * security considerations if mounting `/dev` and `/proc` is safe.
  * RAM, disk, CPU time limits
  * build consistency - don't depend on current time etc
- * reading from FUSE-mounted `/ipfs` is very slow. This is known [issue](https://github.com/ipfs/go-ipfs/issues/2166).
