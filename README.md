@@ -35,7 +35,7 @@ Dependencies
 ------------
 
 * IPFS (daemonized)
-* Bubblewrap 1.8
+* Bubblewrap 2.0
 * [ipfs-api-mount](https://github.com/SupraSummus/ipfs-api-mount)
 * sh + tar + gzip + some other obvious things
 * GNU Make (only if you want to build example images or use install script)
@@ -81,7 +81,6 @@ and inside spawned container:
     file /bin/busybox.static
     # /bin/busybox.static: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped
 
-
 ### Example images
 
 Hashes and build scripts of example containers are listed in `examples/`.
@@ -100,7 +99,6 @@ to delete prebuilt images and then call `make -C examples`.
 TODOs
 -----
 
- * add `--aspid1` to bubblewrap call.
  * security considerations if mounting `/dev` and `/proc` is safe.
  * RAM, disk, CPU time limits
  * build consistency - don't depend on current time etc

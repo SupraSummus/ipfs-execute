@@ -1,11 +1,19 @@
 #!/bin/sh
 set -e
 
+function rm_very_force {
+	rm -rf "$1" 2> /dev/null || $(chmod -R u+w "$1" && rm -rf "$1")
+}
+
 function cleanup {
 	# cleanup
 	fusermount -u input || true
-	rm -rf rootfs input tmp output
+	rm_very_force rootfs
+	rm_very_force input
+	rm_very_force tmp
+	rm_very_force output
 }
+
 trap cleanup EXIT
 
 # parse args
@@ -29,9 +37,11 @@ ipfs-api-mount --background $(ipfs resolve -r -- "$input") input
 set +e
 env -i `which bwrap` \
 	--unshare-all \
+	--as-pid-1 \
 	--uid 0 \
 	--gid 0 \
 	--die-with-parent \
+	--hostname sandbox \
 	--bind rootfs / \
 	--ro-bind input /input \
 	--bind output /output \
